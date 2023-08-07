@@ -1,3 +1,5 @@
+use std::time::{SystemTime, UNIX_EPOCH};
+
 #[derive(Clone)]
 pub struct User {
     pub username: String,
@@ -22,4 +24,29 @@ impl User {
         }
     } 
 
+}
+
+/// A review for a specific guest.
+#[derive(Clone)]
+pub struct Review {
+    pub content: String,
+    pub host_uid: String,
+    pub guest_uid: String,
+    pub timestamp: u64,
+}
+
+impl Review {
+    pub fn new(content: String, host_uid: String, guest_uid: String) -> Review {
+        let now = SystemTime::now();
+        // Calculate the duration since the Unix epoch (January 1, 1970)
+        let timestamp = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
+
+        // Extract the number of seconds from the duration
+        return Review {
+            content,
+            host_uid,
+            guest_uid,
+            timestamp: timestamp.as_secs(),
+        }
+    }
 }

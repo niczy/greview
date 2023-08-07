@@ -4,15 +4,15 @@ use std::collections::HashMap;
 use super::*;
 
 #[derive(Clone)]
-pub struct HostMemStorage {
+pub struct UserStoreMemImpl {
     uid_user_map: HashMap<String, User>,
     username_user_map: HashMap<String, User>,
     verification_code_map: HashMap<String, String>
 }
 
-impl HostMemStorage {
-    pub fn new() -> HostMemStorage {
-        return HostMemStorage{
+impl UserStoreMemImpl {
+    pub fn new() -> UserStoreMemImpl {
+        return UserStoreMemImpl {
             uid_user_map: HashMap::new(),
             username_user_map: HashMap::new(),
             verification_code_map: HashMap::new()
@@ -20,7 +20,7 @@ impl HostMemStorage {
     }
 }
 
-impl HostStore for HostMemStorage {
+impl UserStore for UserStoreMemImpl {
     fn create_user(&mut self, username: &str, password_hash: &str) -> User {
         let uid = "test".to_owned();
         let user = User::new(
@@ -89,7 +89,7 @@ mod tests {
 
     #[test]
     fn test_user_operation() {
-        let mut mem_store = HostMemStorage::new();
+        let mut mem_store = UserStoreMemImpl::new();
         let mut user = mem_store.create_user("name", 
         "passwordhash");
         assert_eq!(user.verified, false);
@@ -107,7 +107,7 @@ mod tests {
 
     #[test]
     fn test_verification_code() {
-        let mut mem_store = HostMemStorage::new();
+        let mut mem_store = UserStoreMemImpl::new();
         let user = mem_store.create_user("name", 
         "password_hash");
         let code = mem_store.create_verification_code(&user).unwrap();

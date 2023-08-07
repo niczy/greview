@@ -5,7 +5,7 @@ use std::sync::{ Arc, RwLock };
 
 #[derive(Clone)]
 pub struct GReview {
-    pub s: Arc<RwLock<dyn storage::HostStore + Sync + Send>>
+    pub s: Arc<RwLock<dyn storage::UserStore + Sync + Send>>
 }
 
 #[derive(Debug)]

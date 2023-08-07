@@ -1,7 +1,8 @@
-use crate::data::User;
+use crate::data::{User, Review};
 
-pub mod host;
-pub trait HostStore {
+pub mod user;
+pub mod review;
+pub trait UserStore {
     fn create_user(&mut self, username: &str, password_hash: &str) -> User;
     fn update_user(&mut self, user: &User) -> Result<User, StoreError>;
     fn lookup_user(&self, uid: &str) -> Option<User>;
@@ -15,7 +16,8 @@ pub trait HostStore {
 }
 
 pub trait ReviewStore {
-
+    fn add_review(&mut self, review: &Review) -> Review;
+    fn list_reviews(&self, user: &User) -> Vec<&Review>;
 }
 
 

@@ -10,7 +10,7 @@ use actix_web::{
     HttpRequest,
     Responder};
 use crate::greview::review;
-use crate::storage::host::HostMemStorage;
+use crate::storage::user::UserStoreMemImpl;
 use serde::Deserialize;
 use env_logger;
 use log::info;
@@ -73,7 +73,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     info!("starting greview server");
-    let store = HostMemStorage::new();
+    let store = UserStoreMemImpl::new();
     let greview = review::GReview{
         s: Arc::new(RwLock::new(store)),
     };
