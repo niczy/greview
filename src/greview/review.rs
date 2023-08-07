@@ -1,10 +1,11 @@
-use crate::{greview::user::User, storage::StoreError};
+use crate::storage::StoreError;
 use crate::storage;
+use crate::data::User;
 use std::sync::{ Arc, RwLock };
 
 #[derive(Clone)]
 pub struct GReview {
-    pub s: Arc<RwLock<dyn storage::Storage + Sync + Send>>
+    pub s: Arc<RwLock<dyn storage::HostStore + Sync + Send>>
 }
 
 #[derive(Debug)]

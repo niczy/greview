@@ -1,18 +1,18 @@
-use crate::greview::user::User;
+use crate::data::User;
 use std::collections::HashMap;
 
-use super::{Storage, StoreError};
+use super::*;
 
 #[derive(Clone)]
-pub struct MemStorage {
+pub struct HostMemStorage {
     uid_user_map: HashMap<String, User>,
     username_user_map: HashMap<String, User>,
     verification_code_map: HashMap<String, String>
 }
 
-impl MemStorage {
-    pub fn new() -> MemStorage {
-        return MemStorage{
+impl HostMemStorage {
+    pub fn new() -> HostMemStorage {
+        return HostMemStorage{
             uid_user_map: HashMap::new(),
             username_user_map: HashMap::new(),
             verification_code_map: HashMap::new()
@@ -20,15 +20,14 @@ impl MemStorage {
     }
 }
 
-impl Storage for MemStorage {
+impl HostStore for HostMemStorage {
     fn create_user(&mut self, username: &str, password_hash: &str) -> User {
         let uid = "test".to_owned();
-        let user = User {
-            username: username.to_owned(),
-            uid: uid.clone(),
-            verified: false,
-            password_hash: password_hash.to_owned(),
-        };
+        let user = User::new(
+            username.to_owned(),
+            uid.clone(),
+            false,
+            password_hash.to_owned());
         self.uid_user_map.insert(uid, user.clone());
         return user 
     }
@@ -90,8 +89,9 @@ mod tests {
 
     #[test]
     fn test_user_operation() {
-        let mut mem_store = MemStorage::new();
-        let mut user = mem_store.create_user("name", "passwordhash");
+        let mut mem_store = HostMemStorage::new();
+        let mut user = mem_store.create_user("name", 
+        "passwordhash");
         assert_eq!(user.verified, false);
         user.verified = true;
         mem_store.update_user(&user).unwrap();
@@ -107,8 +107,9 @@ mod tests {
 
     #[test]
     fn test_verification_code() {
-        let mut mem_store = MemStorage::new();
-        let user = mem_store.create_user("name", "password_hash");
+        let mut mem_store = HostMemStorage::new();
+        let user = mem_store.create_user("name", 
+        "password_hash");
         let code = mem_store.create_verification_code(&user).unwrap();
         let looked_up_code = mem_store.lookup_verification_code(&user).unwrap();
         assert_eq!(looked_up_code, &code);

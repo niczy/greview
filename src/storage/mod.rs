@@ -1,7 +1,7 @@
-use crate::greview::user::User;
+use crate::data::User;
 
-pub mod store;
-pub trait Storage {
+pub mod host;
+pub trait HostStore {
     fn create_user(&mut self, username: &str, password_hash: &str) -> User;
     fn update_user(&mut self, user: &User) -> Result<User, StoreError>;
     fn lookup_user(&self, uid: &str) -> Option<User>;
@@ -12,6 +12,10 @@ pub trait Storage {
     fn create_verification_code(&mut self, user: &User) -> Result<String, StoreError>;
     fn invalidate_verification_code(&mut self, user: &User) -> Result<bool, StoreError>; 
     fn lookup_verification_code(&self, user: &User) -> Option<&String>;
+}
+
+pub trait ReviewStore {
+
 }
 
 

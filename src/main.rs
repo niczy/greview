@@ -10,7 +10,7 @@ use actix_web::{
     HttpRequest,
     Responder};
 use crate::greview::review;
-use crate::storage::store::MemStorage;
+use crate::storage::host::HostMemStorage;
 use serde::Deserialize;
 use env_logger;
 use log::info;
@@ -22,8 +22,7 @@ include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 pub mod greview;
 pub mod storage;
-
-
+pub mod data;
 
 #[derive(Deserialize)]
 struct CreateUserRequest {
@@ -74,7 +73,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     info!("starting greview server");
-    let store = MemStorage::new();
+    let store = HostMemStorage::new();
     let greview = review::GReview{
         s: Arc::new(RwLock::new(store)),
     };
