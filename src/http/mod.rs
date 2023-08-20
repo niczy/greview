@@ -17,6 +17,7 @@ use actix_web_static_files::ResourceFiles;
 
 mod user;
 mod review;
+mod utils;
 
 pub async fn run_server() -> std::io::Result<()> {
         HttpServer::new(move || {

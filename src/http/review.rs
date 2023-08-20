@@ -12,7 +12,9 @@ use serde::{Deserialize, Serialize};
 use crate::{
     greview::{ReviewActor, self},
     data,
+    http::utils::respond
 };
+use anyhow::{Result, Error};
 
 
 #[derive(Deserialize)]
@@ -51,6 +53,7 @@ struct GetReviewsResponse {
     reviews: Vec<Review>,
 }
 
+
 #[post("/_/review/create")]
 async fn post_review(
     review: Json<AddReviewRequest>,
@@ -64,12 +67,11 @@ async fn post_review(
         review: review,
         publisher: publisher,
     }).await.unwrap();
-    match result {
-        Ok(review) => HttpResponse::Ok().json(AddReviewResponse{
+    respond(result.map(|review| {
+        AddReviewResponse{
             review: Review::from(&review),
-        }),
-        Err(err) => HttpResponse::InternalServerError().body(format!("err: {:?}", err))
-    }
+        }
+    }))
 }
 
 #[post("/_/reviews")]
@@ -79,11 +81,10 @@ async fn get_reviews(
     let result = review_addr.send(greview::ListReviewReq{
         uid: req.guest_uid.clone(),
     }).await.unwrap();
-    match result {
-        Ok(reviews) => HttpResponse::Ok().json(GetReviewsResponse{
-            reviews: reviews.iter().map(|r| Review::from(r)).collect(),
-        }),
-        Err(err) => HttpResponse::InternalServerError().body(format!("err: {:?}", err))
-    }
+    respond(result.map(|r| {
+        GetReviewsResponse{
+            reviews: r.iter().map(|r| Review::from(r)).collect(),
+        }
+    }))
 }
 

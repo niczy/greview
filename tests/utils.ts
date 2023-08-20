@@ -2,6 +2,29 @@ import { spawn, ChildProcess } from 'child_process';
 import * as http from 'http';
 import request from 'sync-request';
 
+export class Tester {
+
+  readonly apiUrl = "http://127.0.0.1:8085" 
+
+  // Post an review.
+  async postReview(obj: any): Promise<Response> {
+      return await this.post(this.apiUrl + "/_/review/create", obj);
+  }
+
+  // Get an review.
+  async getReview(obj: any): Promise<Response> {
+    return await this.post(this.apiUrl + "/_/reviews", obj);
+  }
+
+  async post(url: string, obj: any): Promise<Response> {
+      const response = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify(obj),
+          headers: { "Content-Type": "application/json" },
+      });
+      return response
+  }
+}
 
 export async function startServer(): Promise<ChildProcess> {
   // Define the command and its arguments
