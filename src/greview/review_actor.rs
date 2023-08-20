@@ -3,16 +3,17 @@ use std::{vec, sync::{Arc, RwLock}};
 use crate::{data::{Review, User}, storage::ReviewStore};
 use actix::prelude::*;
 use anyhow::{Result, Ok};
+use tracing::debug;
 
 
-#[derive(Message)]
+#[derive(Message, Debug)]
 #[rtype(result = "Result<Review, anyhow::Error>")]
 pub struct AddReviewReq{
     pub review: Review,
     pub publisher: User
 }
 
-#[derive(Message)]
+#[derive(Message, Debug)]
 #[rtype(result = "Result<Vec<Review>, anyhow::Error>")]
 pub struct ListReviewReq{
     pub uid: String,
@@ -40,6 +41,7 @@ impl Handler<AddReviewReq> for ReviewActor {
     type Result = Result<Review, anyhow::Error>;
 
     fn handle(&mut self, msg: AddReviewReq, ctx: &mut Context<Self>) -> Self::Result {
+        debug!("addReviewReq: {:?}", msg);
         let review = self.s.write().unwrap().add_review(&msg.review);
         Ok(review)
     }
@@ -49,8 +51,9 @@ impl Handler<ListReviewReq> for ReviewActor {
     type Result = Result<Vec<Review>, anyhow::Error>;
 
     fn handle(&mut self, msg: ListReviewReq, ctx: &mut Context<Self>) -> Self::Result {
+        debug!("ListReviewReq: {:?}", msg);
         let review_store = self.s.read().unwrap();
-        let reviews = review_store.list_reviews(msg.uid.as_str());
+        let reviews = review_store.list_reviews(&msg.uid);
         Ok(reviews.iter().map(|r| (*r).clone()).collect())
     }
 }
@@ -67,7 +70,12 @@ mod tests {
             s: Arc::new(RwLock::new(review_store)),
         };
         let addr = review_actor.start();
-        let review = Review::new_for_testing();
+        let guest_uid: String = "ttuid".to_owned();
+        let review = Review::new(
+            "content".to_owned(),
+            "host_uid".to_owned(),
+            guest_uid,
+        );
         let add_result = addr.send(AddReviewReq{
             review: review.clone(),
             publisher: User::new_for_testing(),

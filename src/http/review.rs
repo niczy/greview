@@ -17,17 +17,22 @@ use crate::{
 
 #[derive(Deserialize)]
 struct AddReviewRequest {
+    guest_uid: String,
     content: String,
 }
 
 #[derive(Deserialize, Serialize)]
 struct Review {
+    // UID for the user being reviewed 
+    guest_uid: String,
     content: String,
 }
 
-impl Review {
+impl From<&data::Review> for Review {
     fn from(r: &data::Review) -> Self {
-        Review { content: r.content.clone() }
+        Review {
+            guest_uid: r.guest_uid.clone(),
+            content: r.content.clone() }
     }
 }
 
@@ -52,8 +57,8 @@ async fn post_review(
     review_addr: Data<Addr<ReviewActor>>, _req: HttpRequest) -> impl Responder {
     let review = data::Review::new(
         review.content.clone(), 
-        "guest_id".to_owned(), 
-        "host_id".to_owned());
+        "host_id".to_owned(),
+        review.guest_uid.clone());
     let publisher = data::User::new_for_testing();
     let result = review_addr.send(greview::AddReviewReq{
         review: review,

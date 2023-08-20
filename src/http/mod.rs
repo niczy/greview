@@ -46,5 +46,3 @@ pub async fn run_server() -> std::io::Result<()> {
     .bind(("127.0.0.1", 8085))?
     .run().await
 }
-
-mod test_review_api;

@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::data::{Review, User};
 
 use super::ReviewStore;
+use log::debug;
 
 
 
@@ -26,6 +27,7 @@ impl ReviewStore for ReviewStoreMemImpl {
                 self.reviews.insert(key, vec!(review.clone()));
             }
         };
+        debug!("[ReviewStore] added review {:?}", review);
         review
     }
 

@@ -10,22 +10,41 @@ describe("test group", () => {
     });
 
     test("post review", async () => {
-        expect(2 + 2).toBe(4);
         const url = 'http://127.0.0.1:8085/_/review/create';
+        const uid = "uid";
         const response = await fetch(url, {
             method: "POST",
-            body: JSON.stringify({ content: "Hello from Bun!" }),
+            body: JSON.stringify({
+                content: "Hello from greview!",
+                guest_uid: uid 
+            }),
             headers: { "Content-Type": "application/json" },
         });
-        console.log(await response.text());
-    });
+        expect(response.status).toBe(200);
+        const createdReview = JSON.parse(await response.text());
+        console.log("created review: " + JSON.stringify(createdReview));
 
-    test("2 + 3", () => {
-        expect(2 + 2).toBe(4);
+        const getReview = await fetch('http://127.0.0.1:8085/_/reviews', {
+            method: "POST",
+            body: JSON.stringify({
+                guest_uid: uid 
+            }),
+            headers: { "Content-Type": "application/json" },
+        })
+
+        // console.log("get review: " + await getReview.text());
+        expect(getReview.status).toBe(200);
+        const readReview = JSON.parse(await getReview.text());
+        const reviews: Array<Object> = readReview["reviews"];
+
+        console.log("read review is " + JSON.stringify(reviews));
+        
+        expect(reviews.length).toBe(1);
+        expect(createdReview.review).toEqual(reviews[0]);
     });
 
     afterAll(() => {
         console.log("after all")
-        server.kill();
+        server.kill("SIGKILL");
     });
 });

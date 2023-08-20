@@ -37,13 +37,13 @@ export async function startServer(): Promise<ChildProcess> {
 
   for (var i = 0; i < 10; i++) {
     const url = 'http://127.0.0.1:8085';
-    const response = await fetch(url);
-    if (response.status != 200) {
-      console.log("retry in 1 second.")
-      Bun.sleepSync(1000); 
-    } else {
+    try {
+      const response = await fetch(url);
       break;
-    }
+    } catch (e) {
+        console.log("retry in 1 second.")
+        Bun.sleepSync(2000); 
+    }    
   }
   return childProcess;
 }

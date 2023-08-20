@@ -1,7 +1,7 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 use actix::prelude::*;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct User {
     pub username: String,
     pub uid: String,

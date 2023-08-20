@@ -16,6 +16,7 @@ actix-service = "2"
 log = "0.4.19"
 serde = { version = "1.0", features = ["derive"] }
 static-files = "0.2.1"
+tracing = "0.1.37"
 
 [build-dependencies]
 static-files = "0.2.1"
