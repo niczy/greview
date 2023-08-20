@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@types/node": "^20.5.1"
+    "@types/node": "^20.5.1",
+    "sync-request": "^6.1.0"
   }
 }

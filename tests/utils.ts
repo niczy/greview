@@ -1,7 +1,9 @@
 import { spawn, ChildProcess } from 'child_process';
+import * as http from 'http';
+import request from 'sync-request';
 
 
-export function startServer(): ChildProcess {
+export async function startServer(): Promise<ChildProcess> {
   // Define the command and its arguments
   const command = 'cargo';
   const args = ['run'];
@@ -32,5 +34,16 @@ export function startServer(): ChildProcess {
 
   // Detach from the child process
   // childProcess.unref();
+
+  for (var i = 0; i < 10; i++) {
+    const url = 'http://127.0.0.1:8085';
+    const response = await fetch(url);
+    if (response.status != 200) {
+      console.log("retry in 1 second.")
+      Bun.sleepSync(1000); 
+    } else {
+      break;
+    }
+  }
   return childProcess;
 }

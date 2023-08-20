@@ -2,19 +2,22 @@ import { expect, test, describe, beforeAll, afterAll } from "bun:test";
 import { startServer } from "./utils";
 import { ChildProcess } from "child_process";
 
-test("2 + 2", () => {
-  expect(2 + 2).toBe(4);
-});
-
 describe("test group", () => {
     var server: ChildProcess;
-    beforeAll(() => {
+    beforeAll(async () => {
         console.log("beforeall")
-        server = startServer();
+        server = await startServer();
     });
 
-    test("2 + 2", () => {
+    test("post review", async () => {
         expect(2 + 2).toBe(4);
+        const url = 'http://127.0.0.1:8085/_/review/create';
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify({ content: "Hello from Bun!" }),
+            headers: { "Content-Type": "application/json" },
+        });
+        console.log(await response.text());
     });
 
     test("2 + 3", () => {
