@@ -29,6 +29,7 @@ impl UserStore for UserStoreMemImpl {
             false,
             password_hash.to_owned());
         self.uid_user_map.insert(uid, user.clone());
+        self.username_user_map.insert(String::from(username), user.clone());
         return user 
     }
 

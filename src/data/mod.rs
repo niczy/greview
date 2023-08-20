@@ -1,4 +1,5 @@
 use std::time::{SystemTime, UNIX_EPOCH};
+use actix::prelude::*;
 
 #[derive(Clone)]
 pub struct User {
@@ -15,7 +16,7 @@ impl User {
         uid: String,
         verified: bool,
         password_hash: String) -> User {
-        return User {
+        User {
             username,
             uid, 
             verified,
@@ -24,10 +25,20 @@ impl User {
         }
     } 
 
+    pub fn new_for_testing() -> User {
+        User {
+            username: "username".to_owned(),
+            uid: "uid".to_owned(), 
+            verified: false,
+            password_hash: "hash".to_owned(),
+            airbnb_id: None,
+        }
+    }
+
 }
 
 /// A review for a specific guest.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Review {
     pub content: String,
     pub host_uid: String,
@@ -47,6 +58,15 @@ impl Review {
             host_uid,
             guest_uid,
             timestamp: timestamp.as_secs(),
+        }
+    }
+
+    pub fn new_for_testing() -> Review {
+        Review{
+            content: "content".to_owned(),
+            host_uid: "host_uid".to_owned(),
+            guest_uid: "guest_uid".to_owned(),
+            timestamp: 1 as u64,
         }
     }
 }

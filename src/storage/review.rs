@@ -11,10 +11,9 @@ pub struct ReviewStoreMemImpl {
 }
 
 impl ReviewStoreMemImpl {
-    fn new() -> ReviewStoreMemImpl {
+    pub fn new() -> ReviewStoreMemImpl {
         ReviewStoreMemImpl { reviews: HashMap::new() }
     }
-
 }
 
 impl ReviewStore for ReviewStoreMemImpl {
@@ -30,8 +29,8 @@ impl ReviewStore for ReviewStoreMemImpl {
         review
     }
 
-    fn list_reviews(&self, user: &User) -> Vec<&Review> {
-        let reviews = self.reviews.get(&user.uid);
+    fn list_reviews(&self, uid: &str) -> Vec<&Review> {
+        let reviews = self.reviews.get(uid);
         match reviews {
             Some(reviews) => reviews.iter().map(|r| r).collect(),
             None => vec![],
@@ -41,7 +40,7 @@ impl ReviewStore for ReviewStoreMemImpl {
 
 #[cfg(test)]
 mod tests {
-    use crate::{data::{Review, User}, storage::ReviewStore};
+    use crate::{data::{Review}, storage::ReviewStore};
 
     use super::ReviewStoreMemImpl;
 
@@ -58,14 +57,8 @@ mod tests {
             
             let _ = store.add_review(&review);
         }
-        let user = User::new(
-            "username".to_owned(),
-                guest_uid,
-                false,
-                "hash".to_owned()
-        );
 
-        let reviews = store.list_reviews(&user);
+        let reviews = store.list_reviews(guest_uid.as_str());
         assert_eq!(10, reviews.len());
     }
 }
