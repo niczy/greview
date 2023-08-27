@@ -11,6 +11,10 @@ export class Tester {
       return await this.post(this.apiUrl + "/_/review/create", obj);
   }
 
+  async createUser(obj: any): Promise<Response> {
+    return await this.post(this.apiUrl + "/_/user/create", obj);
+  }
+
   // Get an review.
   async getReview(obj: any): Promise<Response> {
     return await this.post(this.apiUrl + "/_/reviews", obj);

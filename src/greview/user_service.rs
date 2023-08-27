@@ -3,8 +3,9 @@ use crate::storage;
 use actix::prelude::*;
 use anyhow::anyhow;
 use crate::data::User;
+use std::error::Error;
 use std::sync::{ Arc, RwLock };
-use std::result::Result::Err;
+use std::fmt::Display;
 
 #[derive(Clone)]
 pub struct UserService{
@@ -69,6 +70,26 @@ impl Handler<LookupUserReq> for UserActor {
 #[derive(Debug)]
 pub enum UserServiceError {
     UserNotFound
+}
+
+impl Error for UserServiceError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+
+    fn description(&self) -> &str {
+        "description() is deprecated; use Display"
+    }
+
+    fn cause(&self) -> Option<&dyn Error> {
+        self.source()
+    }
+} 
+
+impl Display for UserServiceError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        todo!()
+    }
 }
 
 
