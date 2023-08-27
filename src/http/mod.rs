@@ -1,13 +1,11 @@
-use actix::{Actor};
+use actix::Actor;
 use actix_web::{
     App,
     web::Data,
-    HttpServer, dev::{Service, ServiceResponse, AppConfig}, middleware::Logger,
+    HttpServer, middleware::Logger,
 };
-use actix_http::Request;
-use actix_service::{IntoServiceFactory, ServiceFactory};
 use crate::{
-    greview::{UserService, ReviewActor},
+    greview::{ReviewActor, UserActor},
     storage::review::ReviewStoreMemImpl,
     generate,
 };
@@ -22,9 +20,11 @@ mod utils;
 pub async fn run_server() -> std::io::Result<()> {
         HttpServer::new(move || {
         let store = UserStoreMemImpl::new();
-        let user_service = UserService{
+        let user_actor = UserActor{
             s: Arc::new(RwLock::new(store)),
         };
+        let user_addr = user_actor.start();
+
         let review_store = ReviewStoreMemImpl::new();
 
         let review_actor = ReviewActor{
@@ -36,7 +36,7 @@ pub async fn run_server() -> std::io::Result<()> {
         let generated = generate();
         App::new()
             .wrap(Logger::new("%r: %a %{User-Agent}i, response_code:%s"))
-            .app_data(Data::new(Arc::new(RwLock::new(user_service.clone()))))
+            .app_data(Data::new(user_addr.clone()))
             .app_data(Data::new(review_addr.clone()))
             .service(user::create_user)
             .service(user::verify_user)

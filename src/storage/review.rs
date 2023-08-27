@@ -42,7 +42,7 @@ impl ReviewStore for ReviewStoreMemImpl {
 
 #[cfg(test)]
 mod tests {
-    use crate::{data::{Review}, storage::ReviewStore};
+    use crate::{data::Review, storage::ReviewStore};
 
     use super::ReviewStoreMemImpl;
 
