@@ -3,6 +3,7 @@
 **/*.tar.gz
 **/*.tgz
 **/*.log
+bun.lockb
 
 package-lock.json
 **/*.bun

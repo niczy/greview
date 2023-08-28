@@ -35,7 +35,7 @@ const server = Bun.serve({
   fetch(request) {
     let reqPath = new URL(request.url).pathname;
     console.log(request.method, reqPath);
-    if (reqPath === "/") reqPath = "/index.html";
+    if (reqPath.split(".").length === 1) reqPath = "/index.html";
 
     // check public
     const publicResponse = serveFromDir({

@@ -13,7 +13,8 @@
     "allowJs": true,
     "types": [
       "bun-types", // add Bun global
-      "@types/web"
+      "@types/web",
+      "@types/react-router-dom"
     ]
   }
 }
