@@ -34,11 +34,11 @@ impl Actor for UserActor {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
-       println!("Actor is alive");
+       println!("User Actor is alive");
     }
 
     fn stopped(&mut self, ctx: &mut Context<Self>) {
-       println!("Actor is stopped");
+       println!("User Actor is stopped");
     }
 }
 
